@@ -1,0 +1,23 @@
+{
+	"name": "reify/reify",
+	"description": "A mapping library",
+	"type": "library",
+	"authors": [
+		{
+			"name": "Leroy Bakker",
+			"email": "leroy@lorey.nl"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"Reify\\": "src/",
+			"Reify\\Tests\\": "tests/"
+		}
+	},
+	"require-dev": {
+		"pestphp/pest": "^0.3.19"
+	},
+	"require": {
+		"ext-json": "*"
+	}
+}
