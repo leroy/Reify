@@ -94,3 +94,25 @@ JSON;
     expect($person->address)->toBeInstanceOf(\Reify\Tests\Fixtures\Address::class);
     expect($person->address->street)->toBe('Harry');
 });
+
+it('maps plain objects', function() {
+    $json = <<<JSON
+{
+    "data": {
+        "street": "Harry",
+        "number": "1",
+        "city": "Potter",
+        "postalcode": "0000AA"
+    }
+}
+JSON;
+
+    $plainObject = \Reify\Reify::json($json)->to(\Reify\Tests\Fixtures\PlainObject::class);
+
+    expect($plainObject->data)->toBeObject();
+    expect($plainObject->data->street)->toBe("Harry");
+});
+
+it('throws a JsonException on invalid json', function() {
+    \Reify\Reify::json('invalid');
+})->throws(JsonException::class);

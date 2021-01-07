@@ -28,7 +28,7 @@ class Type
     )
     {
         if ($this->isScalar() && !empty($this->properties)) {
-            throw new \ReifyException('A scalar type can not contain properties');
+            throw new ReifyException('A scalar type can not contain properties');
         }
     }
 
@@ -65,6 +65,11 @@ class Type
     public static function isScalarType(string $name): bool
     {
         return in_array($name, self::TYPES);
+    }
+
+    public static function isObject(string $name): bool
+    {
+        return $name === 'object';
     }
 
     public static function isArray(string $name): bool

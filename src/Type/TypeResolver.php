@@ -21,7 +21,7 @@ class TypeResolver
             return $cache[$type];
         }
 
-        if (Type::isScalarType($type)) {
+        if (Type::isScalarType($type) || Type::isObject($type)) {
             return new Type($type);
         }
 

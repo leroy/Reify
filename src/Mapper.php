@@ -29,6 +29,10 @@ class Mapper
 
     private function map(Type $type, array $data): mixed
     {
+        if ($type::isObject($type->name)) {
+            return (object) $data;
+        }
+
         $object = $type->instance();
 
         foreach ($data as $key => $value) {
