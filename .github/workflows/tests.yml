@@ -1,2 +1,16 @@
-- name: Run tests
-  uses: NWBY/pest-action@v1.1.1
+name: "Run tests"
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+
+jobs:
+  run-tests:
+    name: "Run tests"
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v1
+      - uses: php-actions/composer@v1
+      - uses: NWBY/pest-action@v1.1.1
