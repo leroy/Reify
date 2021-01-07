@@ -17,16 +17,25 @@ class PropertyResolver
             $cache = [];
         }
 
-        $type = $this->getType($property);
+        $declaringClass = $property->getDeclaringClass()->name;
+        $propertyName = $property->getName();
 
-        $typeResolver = new Type\TypeResolver();
+        $key = "$declaringClass::$propertyName";
 
-        return new Property(
-            $typeResolver->resolve($property->getDeclaringClass()->name),
-            $property->getName(),
-            $typeResolver->resolve($type),
-            array: Type::isArray($property->getType()->getName())
-        );
+        if (!isset($cache[$key])) {
+            $type = $this->getType($property);
+
+            $typeResolver = new Type\TypeResolver();
+
+            $cache[$key] = new Property(
+                $typeResolver->resolve($declaringClass),
+                $property->getName(),
+                $typeResolver->resolve($type),
+                array: Type::isArray($property->getType()->getName())
+            );
+        }
+
+        return $cache[$key];
     }
 
     private function getType(ReflectionProperty $property): string
