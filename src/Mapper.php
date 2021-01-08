@@ -2,7 +2,7 @@
 
 namespace Reify;
 
-
+use Reify\Attributes\Construct;
 use Reify\Exceptions\ReifyException;
 use Reify\Type\TypeResolver;
 
@@ -30,7 +30,7 @@ class Mapper
     private function map(Type $type, array $data): mixed
     {
         if ($type::isObject($type->name)) {
-            return (object) $data;
+            return (object)$data;
         }
 
         $object = $type->instance();
@@ -42,27 +42,46 @@ class Mapper
                 continue;
             }
 
-            if (is_null($value) && !$property->isNullable())
-            {
-                throw new ReifyException("{$property->getFullyQualifiedName()} is not declared nullable but no value was found the given data");
-            }
-
-            if (!$property->type->isScalar()) {
-                $value = $this->map($property->type, $value);
-            }
-
-            if ($property->isArray()) {
-                $value = $this->mapArray($property, $value);
-            }
-
-            $object->{$key} = $value;
+            $object->{$key} = $this->mapProperty($property, $value);
         }
 
         return $object;
     }
 
+    private function mapProperty(Property $property, mixed $value): mixed
+    {
+        if (is_null($value) && !$property->isNullable()) {
+            throw new ReifyException("{$property->getFullyQualifiedName()} is not declared nullable but no value was found the given data");
+        }
+
+        if ($property->isArray()) {
+            return $this->mapArray($property, $value);
+        }
+
+        if ($property->hasAttribute(Construct::class)) {
+            return $this->constructPropertyInstance($property, $value);
+        }
+
+        if (!$property->type->isScalar()) {
+            return $this->map($property->type, $value);
+        }
+
+        return $value;
+    }
+
     private function mapArray(Property $property, array $data): array
     {
-        return array_map(fn(mixed $value) => $this->map($property->type, $value), $data);
+        return array_map(function (mixed $value) use ($property) {
+            if ($property->hasAttribute(Construct::class)) {
+                return $this->constructPropertyInstance($property, $value);
+            }
+
+            return $this->map($property->type, $value);
+        }, $data);
+    }
+
+    private function constructPropertyInstance(Property $property, mixed $value): mixed
+    {
+        return $property->type->instance($value);
     }
 }

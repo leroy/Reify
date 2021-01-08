@@ -36,9 +36,9 @@ it('maps a array property', function() {
 });
 
 it('maps a nullable property', function() {
-    $resolvedProperty = $this->resolver->resolve($this->reflect->getProperty('spouse'));
+    $resolvedProperty = $this->resolver->resolve(\Tests\reflect(\Reify\Tests\Fixtures\Nullable::class)->getProperty('value'));
 
-    expect($resolvedProperty->nullable)->toBe(false);
+    expect($resolvedProperty->nullable)->toBe(true);
 });
 
 it('maps a list complex property', function() {
@@ -55,3 +55,11 @@ it('Throws an exception when there is no type definition', function() {
 it('Throws an exception when the type is array but there is no attribute', function() {
     $this->resolver->resolve(\Tests\reflect(\Reify\Tests\Fixtures\ArrayWithoutType::class)->getProperty('list'));
 })->throws(\Reify\Exceptions\ReifyException::class);
+
+it('maps all the attributes', function() {
+    $resolvedProperty = $this->resolver->resolve(\Tests\reflect(\Reify\Tests\Fixtures\PropertyWithAttributes::class)->getProperty('types'));
+
+    expect($resolvedProperty->getAttributes())->toHaveCount(2);
+    expect($resolvedProperty->getAttribute(\Reify\Attributes\Construct::class))->not()->toBeNull();
+    expect($resolvedProperty->getAttribute(\Reify\Attributes\Type::class))->not()->toBeNull();
+});

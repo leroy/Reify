@@ -77,11 +77,11 @@ class Type
         return $name === 'array';
     }
 
-    /**
+    /*
      * @return T
      */
-    public function instance(): mixed
+    public function instance(...$paramters): mixed
     {
-        return new $this->name;
+        return new $this->name(...$paramters);
     }
 }

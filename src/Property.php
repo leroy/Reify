@@ -2,8 +2,6 @@
 
 namespace Reify;
 
-use Reify\Type;
-
 class Property
 {
     public function __construct(
@@ -12,6 +10,7 @@ class Property
         public Type $type,
         public bool $array = false,
         public bool $nullable = false,
+        private array $attributes = []
     ) {}
 
     public function isArray(): bool
@@ -27,5 +26,25 @@ class Property
     public function getFullyQualifiedName(): string
     {
         return "{$this->declaringType->name}::{$this->name}";
+    }
+
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * @template T
+     * @param T $name
+     * @return T
+     */
+    public function getAttribute(string $name)
+    {
+        return $this->attributes[$name];
+    }
+
+    public function hasAttribute(string $name): bool
+    {
+        return isset($this->attributes[$name]);
     }
 }

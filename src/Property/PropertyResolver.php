@@ -6,6 +6,7 @@ use ReflectionProperty;
 use Reify\Exceptions\ReifyException;
 use Reify\Property;
 use Reify\Type;
+use Reify\Util\Attribute;
 
 class PropertyResolver
 {
@@ -31,7 +32,10 @@ class PropertyResolver
                 $typeResolver->resolve($declaringClass),
                 $property->getName(),
                 $typeResolver->resolve($type),
-                array: Type::isArray($property->getType()->getName())
+                array: Type::isArray($property->getType()->getName()),
+                nullable: $property->getType()->allowsNull(),
+                attributes: Attribute::getAttributes($property)
+
             );
         }
 

@@ -116,3 +116,36 @@ JSON;
 it('throws a JsonException on invalid json', function() {
     \Reify\Reify::json('invalid');
 })->throws(JsonException::class);
+
+it('constructs properties with the Construct attribute', function() {
+    $json = <<<JSON
+{
+    "type": "PLAIN"
+}
+JSON;
+
+    $constructedProperties = \Reify\Reify::json($json)->to(\Reify\Tests\Fixtures\PropertyWithAttributes::class);
+
+    expect($constructedProperties->type)->toBeInstanceOf(\Reify\Tests\Fixtures\Enum::class);
+    expect($constructedProperties->type->value)->toBe("PLAIN");
+});
+
+it('constructs a list of properties with the Construct attribute', function() {
+    $json = <<<JSON
+{
+    "types": ["TYPE_1", "TYPE_2", "TYPE_3"]
+}
+JSON;
+
+    $constructedProperties = \Reify\Reify::json($json)->to(\Reify\Tests\Fixtures\PropertyWithAttributes::class);
+
+    expect($constructedProperties->types)->toBeArray();
+
+    expect($constructedProperties->types[0])->toBeInstanceOf(\Reify\Tests\Fixtures\Enum::class);
+    expect($constructedProperties->types[1])->toBeInstanceOf(\Reify\Tests\Fixtures\Enum::class);
+    expect($constructedProperties->types[2])->toBeInstanceOf(\Reify\Tests\Fixtures\Enum::class);
+
+    expect($constructedProperties->types[0]->value)->toBe("TYPE_1");
+    expect($constructedProperties->types[1]->value)->toBe("TYPE_2");
+    expect($constructedProperties->types[2]->value)->toBe("TYPE_3");
+});
