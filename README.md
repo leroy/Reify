@@ -120,6 +120,10 @@ love metaprogramming and creating developer tools with them.
 
 Building Reify i also had a chance to meet [PestPHP](https://pestphp.com/) and learn more about writing tests for my code.
 
+## Running tests
+
+`vendor/bin/pest`
+
 ## Alternatives
 If you're looking for production worthy recommendations that I use myself please see below:
 
