@@ -34,7 +34,15 @@ Let's say you have a dataset containing information about a person.
 You want to use this data in your application, however just using `json_decode` would result in a plain object with no
 typing and no way to add some functionality to them.
 
-Reify can automatically map the data to any class you want. Let's create our `Person` class first.
+Reify can automatically map the data to any class you want. Let's try to map our data by using our Person class which i defined below.
+
+```php
+
+use Reify\Reify;
+
+$person = Reify::json($data)->to(Person::class);
+
+```
 
 ```php
 
@@ -57,6 +65,8 @@ class Person {
 
 
 ```
+
+
 
 Neat right? Let's dissect what's happening here.
 
