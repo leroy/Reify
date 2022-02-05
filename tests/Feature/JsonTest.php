@@ -79,12 +79,12 @@ JSON;
 it('maps nested objects', function() {
     $json = <<<JSON
 {
-    "name": "Leroy",
+    "firstname": "Leroy",
     "address": {
         "street": "Harry",
-        "number": "1",
+        "house_number": "1",
         "city": "Potter",
-        "postalcode": "0000AA"
+        "postal_code": "0000AA"
     }
 }
 JSON;
