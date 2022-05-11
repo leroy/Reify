@@ -1,5 +1,7 @@
 <?php
 
+use Reify\Tests\Fixtures\Person;
+
 it('maps all properties', function() {
     $json = <<<JSON
 {
@@ -149,3 +151,38 @@ JSON;
     expect($constructedProperties->types[1]->value)->toBe("TYPE_2");
     expect($constructedProperties->types[2]->value)->toBe("TYPE_3");
 });
+
+it('constructs a type from a factory', function() {
+    $json = <<<JSON
+{
+    "person": {
+        "firstname": "Leroy",
+        "lastname": "Bakker"
+    }
+}
+JSON;
+
+    $typeWithFactory = \Reify\Reify::json($json)->to(\Reify\Tests\Fixtures\TypeWithFactory::class);
+
+    expect($typeWithFactory->person)->toBeInstanceOf(Person::class);
+    expect($typeWithFactory->person->firstname)->toBe("Leroy");
+    expect($typeWithFactory->person->lastname)->toBe("Bakker");
+});
+
+it('constructs a type from a type with a factory method', function() {
+    $json = <<<JSON
+{
+    "person": {
+        "firstname": "Leroy",
+        "lastname": "Bakker"
+    }
+}
+JSON;
+
+    $typeWithFactory = \Reify\Reify::json($json)->to(\Reify\Tests\Fixtures\TypeWithFactoryMethod::class);
+
+    expect($typeWithFactory->person)->toBeInstanceOf(Person::class);
+    expect($typeWithFactory->person->firstname)->toBe("Leroy");
+    expect($typeWithFactory->person->lastname)->toBe("Bakker");
+});
+

@@ -20,4 +20,14 @@ class Person
 
     #[Type(Person::class)]
     public array $siblings;
+
+    public static function make(array $data): Person
+    {
+        $person = new Person();
+
+        $person->firstname = $data['firstname'] ?? '';
+        $person->lastname = $data['lastname'] ?? '';
+
+        return $person;
+    }
 }

@@ -3,6 +3,7 @@
 namespace Reify;
 
 use Reify\Attributes\Construct;
+use Reify\Attributes\Factory;
 use Reify\Exceptions\ReifyException;
 use Reify\Type\TypeResolver;
 
@@ -62,6 +63,10 @@ class Mapper
             return $this->constructPropertyInstance($property, $value);
         }
 
+        if ($property->hasAttribute(Factory::class)) {
+            return $this->callFactory($property->getAttribute(Factory::class), $value);
+        }
+
         if (!$property->type->isScalar()) {
             return $this->map($property->type, $value);
         }
@@ -83,5 +88,10 @@ class Mapper
     private function constructPropertyInstance(Property $property, mixed $value): mixed
     {
         return $property->type->instance($value);
+    }
+
+    private function callFactory(Factory $factory, mixed $value): mixed
+    {
+        return $factory->call($value);
     }
 }
