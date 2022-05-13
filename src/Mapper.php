@@ -81,6 +81,11 @@ class Mapper
                 return $this->constructPropertyInstance($property, $value);
             }
 
+            // If the data contains a null element in the array we will keep it
+            if ($value === null) {
+                return null;
+            }
+
             return $this->map($property->type, $value);
         }, $data);
     }
